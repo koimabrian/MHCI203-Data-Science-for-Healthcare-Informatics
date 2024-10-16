@@ -1,0 +1,792 @@
+---
+title: "Lab Work Journal"
+author: "BRIAN KOIMA - S84922"
+date: "2024-10-16"
+output:
+  pdf_document: default
+---
+
+# Lab 1: Vectors, Matrices & Data Frames
+
+## Vector Creation and Subsetting
+
+```{r}
+# Create vectors of different data types
+char_list <- character(length = 0) # Empty character vector
+num_list <- numeric(length = 10) # Numeric vector with default value 0
+log_list <- logical(length = 3) # Logical vector with default value FALSE
+
+# Create a logical vector with TRUE and FALSE values
+log_list_2 <- c(TRUE, FALSE, FALSE, TRUE, TRUE, TRUE)
+
+# Subsetting vectors
+char_list_2 <- c("a", "b", "c", "d", "e") # Create a character vector for subsetting
+char_list_2[5] # Select single element
+log_list_2[2:4] # Select a range of elements
+num_list[3:length(num_list)] # Select elements from a specific position to the end
+```
+
+## Vector Ordering and Concatenation
+
+```{r}
+# Vector ordering
+test <- c(5, 2, 8, 1, 3) # Create a vector for sorting
+sort(test, decreasing = TRUE) # Sort a vector in descending order
+test[order(test, decreasing = TRUE)] # Another way to sort a vector
+
+# Concatenate vectors
+num_list_2 <- c(1, 2, 3, 4, 5)
+new_num_vect <- c(num_list, num_list_2) # Combine two vectors
+new_combo_vect <- c(as.numeric(num_list), log_list) # Combine vectors of different data types (convert to numeric for compatibility)
+```
+
+## Matrix Creation and Exploration
+
+```{r}
+# Create a matrix
+matr <- matrix(data = c(1, 3, 5, 7, NA, 11), nrow = 2, ncol = 3) # Create a 2x3 matrix
+
+# Explore matrix attributes
+class(matr) # Check the class of the matrix
+typeof(matr) # Check the data type of the matrix elements
+```
+
+## Data Frame Manipulation with `mtcars`
+
+```{r}
+# Calculate statistics from the 'mtcars' data frame
+mean(mtcars$mpg) # Calculate the mean of the 'mpg' column
+median(mtcars$cyl) # Calculate the median of the 'cyl' column
+
+# Check if a row of the data frame is a list
+is.list(mtcars[1, ])
+
+# Manipulate the data frame
+mtcars[c(1, 3)] # Keep the 1st and 3rd columns
+mtcars[-c(1, 3)] # Remove the 1st and 3rd columns
+mtcars[!duplicated(mtcars$mpg), ] # Remove duplicate rows based on the 'mpg' column
+subset(mtcars, mpg < 19) # Subset rows based on a condition
+mtcars[mtcars$mpg < 19, ] # Another way to subset rows
+mtcars[which(mtcars$mpg < 19), ] # Another way to subset rows
+mtcars[mtcars$mpg > 20 & mtcars$am == 1, ] # Subset rows based on multiple conditions
+mtcars[grep("Merc", row.names(mtcars), value = TRUE), ] # Filter rows based on a pattern match
+```
+
+## Data Frame Creation and Combination
+
+```{r}
+# Create new data frames based on conditions
+low_mpg <- mtcars[mtcars$mpg < 15, ]
+high_mpg <- mtcars[mtcars$mpg >= 15, ]
+
+# Combine two data frames vertically
+mpg_join <- rbind(low_mpg, high_mpg)
+mpg_join
+# Create a data frame with random values
+car_condition <- data.frame(condition = sample(c("old", "new"), replace = TRUE, size = 32))
+
+# Combine two data frames horizontally
+mpg_join <- cbind(mpg_join, car_condition)
+mpg_join
+```
+
+# Vector Tasks
+
+## Vector Arithmetic and Logical Operations
+
+```{r}
+# Create two numeric vectors
+a <- c(1, 2, 3, 4, 5)
+b <- c(5, 4, 3, 2, 1)
+
+# Perform element-wise addition, subtraction, multiplication, and division
+addition <- a + b
+subtraction <- a - b
+multiplication <- a * b
+division <- a / b
+
+# Create a logical vector indicating which elements of 'a' are greater than the corresponding elements of 'b'
+greater_than <- a > b
+
+# Print the results
+print(addition)
+print(subtraction)
+print(multiplication)
+print(division)
+print(greater_than)
+```
+
+## Indexing and Subsetting
+
+```{r}
+# Create a numeric vector with 15 random integers between 1 and 100
+random_vector <- sample(1:100, 15)
+
+# Extract the elements at positions 3, 7, and 12
+extracted_elements <- random_vector[c(3, 7, 12)]
+
+# Create a new vector that contains only the even numbers from the original vector
+even_numbers <- random_vector[random_vector %% 2 == 0]
+
+# Print the results
+print(random_vector)
+print(extracted_elements)
+print(even_numbers)
+```
+
+# Lab 2: Lists & Functions
+
+## Creating and Manipulating Lists
+
+```{r}
+# Create a list containing different data types
+my_list <- list(numbers = 1:5, fruits = c("apple", "banana", "orange"), is_sunny = c(TRUE, FALSE))
+
+# Access elements in the list
+print(my_list$numbers)  # Access using name
+print(my_list[[2]])  # Access using index
+
+# Add a new element
+my_list$new_element <- c("hello", "world")
+
+# Remove an element
+my_list$is_sunny <- NULL
+
+# Convert list to vector
+new_vector <- unlist(my_list)
+print(new_vector)
+```
+
+## Writing and Calling Functions
+
+```{r}
+# Define a function to add two numbers
+add_numbers <- function(x, y) {
+  return(x + y)
+}
+
+# Call the function
+result <- add_numbers(10, 5)
+print(result)
+```
+
+## Applying Functions to List Elements
+
+```{r}
+# Create a list of numeric values
+number_list <- list(1, 2, 3, 4, 5)
+
+# Define a function to double a number
+double_values <- function(x) {
+  return(x * 2)
+}
+
+# Apply the function to each element of the list
+doubled_list <- lapply(number_list, double_values)
+print(doubled_list)
+```
+
+## Applying Functions to Matrices
+
+```{r}
+# Create a matrix
+my_matrix <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)
+
+# Apply a function to rows or columns of a matrix
+row_sums <- apply(my_matrix, 1, sum)
+col_sums <- apply(my_matrix, 2, sum)
+
+# Print the results
+print(row_sums)
+print(col_sums)
+```
+
+# Practice 1: Creating and Accessing Lists
+
+```{r}
+# Create a list containing a numeric vector, a character vector, and a logical vector
+my_list <- list(numeric_vector = c(1, 2, 3),
+                character_vector = c("a", "b", "c"),
+                logical_vector = c(TRUE, FALSE, TRUE))
+
+# Access and print each element in the list
+print(my_list$numeric_vector)
+print(my_list$character_vector)
+print(my_list$logical_vector)
+```
+
+# Practice 2: Writing and Using Simple Functions
+
+```{r}
+# Write a function that adds two numbers
+add_numbers <- function(x, y) {
+  return(x + y)
+}
+
+# Use the function to add 5 and 3, then print the result
+result <- add_numbers(5, 3)
+print(result)
+```
+
+# Practice 3: Applying a Function to List Elements
+
+```{r}
+# Write a function that doubles a number
+double_number <- function(x) {
+  return(x * 2)
+}
+
+# Create a list of numeric values
+number_list <- list(1, 2, 3, 4, 5)
+
+# Use the function to double each value in the list and print the results
+doubled_list <- lapply(number_list, double_number)
+print(doubled_list)
+```
+
+# Lab 3: Lists & Functions II
+
+## Working with Lists in R
+
+```{r}
+# Example vectors and data frame
+num_vct <- c(2:5) # Numeric vector
+chr_vct <- c("data", "science") # Character vector
+data_frame <- data.frame(x = c("a", "b", "c", "d"), y = c(1:4)) # Simple data frame
+
+# Creating a list
+lista <- list(data_frame, num_vct, chr_vct) # List with a data frame, num_vct, and chr_vct
+print(lista) # Print the list
+
+# List structure and manipulation
+str(lista) # Structure of the list
+length(lista) # Length of the list
+print(as.list(chr_vct)) # Convert a vector to a list
+
+# Assigning names to the list elements
+names(lista) <- c("data", "numbers", "words")
+print(lista[3]) # Access 3rd element using single brackets
+print(lista[[3]]) # Access 3rd element using double brackets
+
+print(is.list(lista[3])) # Check if it is a list
+print(is.list(lista[[3]])) # Check if this is also a list
+print(class(lista[[3]])) # Check the class of the element
+
+# More subsetting and list manipulation
+print(lista$words) # Access an element by name
+print(lista[["words"]]) # Another way to access the element
+print(lista[["words"]][1]) # Access a specific value inside the list element
+lista$new_elem <- c(TRUE, FALSE, FALSE, TRUE) # Add a new element to the list
+print(length(lista)) # Check the length after adding the element
+lista$new_elem <- NULL # Remove the new element
+new_vect <- unlist(lista) # Unlist the list to create a vector
+print(new_vect)
+```
+
+## Working with Functions in R
+
+```{r}
+# Simple function definition
+fun <- function(x) x + 10
+print(fun(5)) # Test the function
+
+# Function with two arguments
+fun2 <- function(x, y) x + y
+print(fun2(3, 4)) # Test the function with two arguments
+
+# Function with multiple expressions inside
+fun <- function(x, y) {
+  a <- sum(x)
+  b <- sum(y)
+  a - b
+}
+print(fun(c(5, 4, 3), c(1, 1, 1))) # Test the function
+```
+
+## Functional Programming and Operators
+
+```{r}
+print("^"(2, 2))
+print(2^2)
+print("+"(2, 2))
+print(2 + 2)
+print("-"("+"(3, 5), 2))
+print("&"(">"(3, 2), TRUE))
+```
+
+## Apply Functions in R
+
+```{r}
+# Create a list and apply a function to each element
+aList <- list(c(1, 2, 3), c(4, 5, 6), c(7, 8, 9), c(10, 11, 12))
+res <- lapply(aList, function(x) { x[1] + x[2] - x[3] })
+print(unlist(res)) # Unlist the result
+```
+
+## Working with Matrices and Apply Functions
+
+```{r}
+# Create a matrix
+myMat <- matrix(c(1, 2, 3, 4, 5, 6, 7, 8, 9), nrow=3, ncol=3)
+
+# Sum of rows
+rsMyMat <- apply(myMat, 1, function(x) { sum(x) })
+print(rsMyMat)
+
+# Sum of columns
+csMyMat <- apply(myMat, 2, function(x) { sum(x) })
+print(csMyMat)
+
+# Using existing functions for row and column sums
+rsMyMat1 <- apply(myMat, 1, sum)
+print(rsMyMat1)
+csMyMat1 <- apply(myMat, 2, sum)
+print(csMyMat1)
+
+print(rowSums(myMat)) # Another way to sum rows
+print(colSums(myMat)) # Another way to sum columns
+```
+
+## Task: Create a Function
+
+```{r}
+# Define a function to add two numbers
+add_two_numbers <- function(a, b) {
+  return(a + b)
+}
+
+# Test the function
+print(add_two_numbers(4, 6)) # Should return 10
+print(add_two_numbers(3, 5)) # Should return 8
+print(add_two_numbers(-2, 7)) # Should return 5
+```
+
+# Lab 4: Data Visualization Using R
+
+## Install and Load Necessary Packages
+
+```{r}
+# Install necessary packages
+install.packages("ggplot2")
+install.packages("gridExtra")
+
+# Load libraries
+library(ggplot2)
+library(gridExtra)
+```
+
+## Scatter Plot: Horsepower vs. MPG
+
+```{r}
+p1 <- ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point() +
+  labs(title = "Scatter Plot of Horsepower vs. MPG",
+       x = "Horsepower",
+       y = "Miles per Gallon")
+print(p1)
+```
+
+## Bar Plot: Cylinder Counts
+
+```{r}
+p2 <- ggplot(mtcars, aes(x = factor(cyl))) +
+  geom_bar() +
+  labs(title = "Bar Plot of Cylinder Counts",
+       x = "Number of Cylinders",
+       y = "Count")
+print(p2)
+```
+
+## Scatter Plot with Color: Horsepower vs. MPG by Cylinder
+
+```{r}
+p3 <- ggplot(mtcars, aes(x = hp, y = mpg, color = factor(cyl))) +
+  geom_point() +
+  labs(title = "Horsepower vs. MPG with Cylinders Colored",
+       x = "Horsepower",
+       y = "Miles per Gallon",
+       color = "Number of Cylinders")
+print(p3)
+```
+
+## Bar Plot with Labels: Cylinder Counts
+
+```{r}
+p4 <- ggplot(mtcars, aes(x = factor(cyl), fill = factor(cyl))) +
+  geom_bar() +
+  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5) +
+  labs(title = "Bar Plot of Cylinder Counts with Labels",
+       x = "Number of Cylinders",
+       y = "Count")
+print(p4)
+```
+
+## Histogram: Miles per Gallon
+
+```{r}
+p5 <- ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 2, fill = "blue", color = "black") +
+  labs(title = "Histogram of Miles per Gallon",
+       x = "Miles per Gallon",
+       y = "Frequency")
+print(p5)
+```
+
+## Box Plot: MPG by Cylinder Count
+
+```{r}
+p6 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot() +
+  labs(title = "Box Plot of MPG by Cylinder Count",
+       x = "Number of Cylinders",
+       y = "Miles per Gallon")
+print(p6)
+```
+
+## Violin Plot: MPG by Cylinder Count
+
+```{r}
+p7 <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_violin() +
+  labs(title = "Violin Plot of MPG by Cylinder Count",
+       x = "Number of Cylinders",
+       y = "Miles per Gallon")
+print(p7)
+```
+
+## Line Plot: Weight vs. MPG
+
+```{r}
+p8 <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_line() +
+  labs(title = "Line Plot of Weight vs MPG",
+       x = "Weight",
+       y = "Miles per Gallon")
+print(p8)
+```
+
+## Density Plot: Miles per Gallon
+
+```{r}
+p9 <- ggplot(mtcars, aes(x = mpg)) +
+  geom_density(fill = "lightblue") +
+  labs(title = "Density Plot of Miles per Gallon",
+       x = "Miles per Gallon",
+       y = "Density")
+print(p9)
+```
+
+## Combine All Plots into a Grid
+
+```{r}
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol = 3, nrow = 3)
+```
+
+#Lab 5: Predicting Heart Disease using R
+
+## Introduction
+
+In this lab, we will use a dataset of heart disease cases to build predictive models. We will start by exploring the data, visualizing important relationships, and then building and evaluating several machine learning models including logistic regression, Support Vector Machine (SVM), and Random Forest.
+
+## Part 1: Data Exploration and Visualization
+
+```{r}
+# Install required libraries
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("corrplot")) install.packages("corrplot")
+library(tidyverse)
+library(corrplot)
+```
+
+```{r}
+
+# Load the heart disease dataset from URL
+data_url <- 'https://raw.githubusercontent.com/koimabrian/Datasets/refs/heads/main/heart.csv'
+data <- read.csv(data_url, comment = "#")
+
+# Display the first and last few rows
+head(data)
+tail(data)
+
+```
+
+```{r}
+# Get a brief overview of the data structure
+glimpse(data)
+
+```
+
+```{r}
+# Determine number of rows, columns, and column names
+ncol(data)
+nrow(data)
+colnames(data)
+
+# Summarize the data (descriptive statistics)
+summary(data)
+```
+
+```{r}
+
+# Create a transformed dataset with more descriptive variable labels
+data2 <- data %>%
+  mutate(
+    sex = ifelse(sex == 1, "MALE", "FEMALE"),
+    fbs = ifelse(fbs == 1, ">120", "<=120"),
+    exang = ifelse(exang == 1, "YES", "NO"),
+    cp = ifelse(cp == 1, "ATYPICAL ANGINA", ifelse(cp == 2, "NON-ANGINAL PAIN", "ASYMPTOMATIC")),
+    restecg = ifelse(restecg == 0, "NORMAL", ifelse(restecg == 1, "ABNORMALITY", "PROBABLE OR DEFINITE")),
+    slope = as.factor(slope),
+    ca = as.factor(ca),
+    thal = as.factor(thal),
+    target = ifelse(target == 1, "YES", "NO")
+  ) %>%
+  mutate_if(is.character, as.factor) %>%
+  dplyr::select(target, sex, fbs, exang, cp, restecg, slope, ca, thal, everything())
+```
+
+```{r}
+
+# Bar plot to visualize the distribution of heart disease presence/absence
+ggplot(data2, aes(x = target)) +
+  geom_bar() +
+  xlab("Heart Disease") +
+  ylab("Count") +
+  ggtitle("Presence & Absence of Heart Disease") +
+  scale_fill_discrete(name = 'Heart Disease', labels = c("Absence", "Presence"))
+
+```
+
+```{r}
+# Proportion of individuals with and without heart disease
+prop.table(table(data2$target))
+
+# Analyze age distribution
+data2 %>%
+  group_by(age) %>%
+  count() %>%
+  filter(n > 10) %>%
+  ggplot() +
+  geom_col(aes(age, n), fill = 'green') +
+  ggtitle("Age Analysis") +
+  xlab("Age") +
+  ylab("Count")
+
+# Compare blood pressure (trestbps) across chest pain types (cp)
+data2 %>%
+  ggplot(aes(x = sex, y = trestbps)) +
+  geom_boxplot(fill = 'purple') +
+  xlab('Sex') +
+  ylab('Blood Pressure') +
+  facet_grid(~ cp)
+
+
+# Compare cholesterol (chol) across chest pain types (cp)
+data2 %>%
+  ggplot(aes(x = sex, y = chol)) +
+  geom_boxplot(fill = 'orange') +
+  xlab('Sex') +
+  ylab('Cholesterol') +
+  facet_grid(~ cp)
+```
+
+```{r}
+
+# Create a correlation matrix
+cor_heart <- cor(data2[, 10:14])
+
+corrplot(cor_heart, method = 'square', type = 'upper')
+```
+
+## Part 2: Model Building and Evaluation
+
+```{r, message=FALSE, warning=FALSE}
+# Install required libraries
+if (!require("caret")) install.packages("caret")
+if (!require("pROC")) install.packages("pROC")
+if (!require("e1071")) install.packages("e1071", dependencies = TRUE)
+if (!require("kernlab")) install.packages("kernlab")
+if (!require("randomForest")) install.packages("randomForest")
+library(caret)
+library(pROC)
+library(e1071)
+library(kernlab)
+library(randomForest)
+```
+
+### Check for Missing Values and Set Random Seed
+
+```{r check-missing-values, message=FALSE, warning=FALSE}
+# Check for missing values
+sum(is.na(data2))
+
+# Set a random seed
+set.seed(10)
+```
+
+### Split Data into Training and Testing Sets
+
+```{r split-data, message=FALSE, warning=FALSE}
+# Split the data into training (70%) and testing (30%) sets
+inTrainRows <- createDataPartition(data2$target, p = 0.7, list = FALSE)
+trainData <- data2[inTrainRows, ]
+testData <- data2[-inTrainRows, ]
+
+# Verify split ratio
+cat("Ratio of training to testing data:", nrow(trainData) / (nrow(testData) + nrow(trainData)), "\n")
+```
+
+### Initialize Model Metric Storage
+
+```{r initialize-metrics, message=FALSE, warning=FALSE}
+# Initialize lists to store model metrics
+AUC <- list()
+Accuracy <- list()
+```
+
+### Logistic Regression Model
+
+```{r logistic-regression, message=FALSE, warning=FALSE}
+# Logistic Regression Model
+logRegModel <- train(target ~ ., data = trainData, method = 'glm', family = 'binomial')
+logRegPrediction <- predict(logRegModel, testData)
+logRegPredictionprob <- predict(logRegModel, testData, type = 'prob')[2]
+
+# Confusion Matrix for Logistic Regression
+logRegConfMat <- confusionMatrix(logRegPrediction, testData[, "target"])
+
+# Calculate AUC and Accuracy for Logistic Regression
+AUC$logReg <- roc(as.numeric(testData$target), as.numeric(as.matrix((logRegPredictionprob))))
+Accuracy$logReg <- logRegConfMat$overall['Accuracy']
+```
+
+### Support Vector Machine (SVM) Model
+
+```{r svm-model, message=FALSE, warning=FALSE}
+# SVM Model with 10-fold cross-validation
+fitControl <- trainControl(method = "repeatedcv", number = 10, repeats = 10, classProbs = TRUE, summaryFunction = twoClassSummary)
+svmModel <- train(target ~ ., data = trainData, method = "svmRadial", trControl = fitControl, preProcess = c("center", "scale"), tuneLength = 8, metric = "ROC")
+
+# Predictions for SVM
+svmPrediction <- predict(svmModel, testData)
+svmPredictionprob <- predict(svmModel, testData, type = 'prob')[2]
+
+# Confusion Matrix for SVM
+svmConfMat <- confusionMatrix(svmPrediction, testData[, "target"])
+
+# Calculate AUC and Accuracy for SVM
+AUC$svm <- roc(as.numeric(testData$target), as.numeric(as.matrix((svmPredictionprob))))
+Accuracy$svm <- svmConfMat$overall['Accuracy']
+```
+
+### Random Forest Model
+
+```{r random-forest-model, message=FALSE, warning=FALSE}
+# Random Forest Model
+RFModel <- randomForest(target ~ ., data = trainData, importance = TRUE, ntree = 200)
+
+# Predictions for Random Forest
+RFPrediction <- predict(RFModel, testData)
+RFPredictionprob <- predict(RFModel, testData, type = "prob")[, 2]
+
+# Confusion Matrix for Random Forest
+RFConfMat <- confusionMatrix(RFPrediction, testData[, "target"])
+
+# Calculate AUC and Accuracy for Random Forest
+AUC$RF <- roc(as.numeric(testData$target), as.numeric(as.matrix((RFPredictionprob))))
+Accuracy$RF <- RFConfMat$overall['Accuracy']
+```
+
+### Compare Model Metrics
+
+```{r compare-models, message=FALSE, warning=FALSE}
+# Compare AUC and Accuracy of all models
+cbind(as.data.frame(matrix(c(AUC, Accuracy), nrow = 3, ncol = 2, dimnames = list(names(AUC), c("AUC", "Accuracy")))))
+```
+
+### Display Confusion Matrices
+
+```{r display-confusion-matrices, message=FALSE, warning=FALSE}
+# Confusion matrices for all models
+logRegConfMat
+svmConfMat
+RFConfMat
+```
+
+## Conclusion
+
+In this lab, we explored the heart disease dataset and built three predictive models: logistic regression, Support Vector Machine (SVM), and Random Forest. The models were evaluated using AUC and accuracy metrics, with the results compared across models.
+
+# Lab 6: Clustering using K-means (Wine Dataset Clustering Analysis)
+
+## Load Dataset
+
+The necessary libraries and the wine dataset are loaded.
+
+```{r load-data}
+library(tidyverse)
+
+data_url <- 'https://raw.githubusercontent.com/koimabrian/Datasets/refs/heads/main/Wine.csv'
+Wine <- read.csv(data_url, comment = "#")  # Handle potential comments in the CSV
+head(Wine)
+```
+
+## Standardize Continuous Variables
+
+The continuous variables (excluding observation number and country) are scaled.
+
+```{r standardize-data}
+data <- Wine %>% select(-Obs, -Country) %>% scale()
+```
+
+## Create Clusters with K-Means
+
+The k-means algorithm is applied to the standardized data, setting the number of clusters to 3.
+
+```{r kmeans-clustering}
+kmeans_result <- kmeans(data, centers = 3, iter.max = 100, nstart = 100)
+kmeans_result
+```
+
+## Determine the Optimal Number of Clusters
+
+To identify the optimal number of clusters, the within-cluster sum of squares (WSS), silhouette method, and gap statistic are visualized.
+
+```{r optimal-cluster-number, warning=FALSE, message=FALSE}
+library(factoextra)
+# WSS plot
+fviz_nbclust(data, kmeans, method = "wss")
+
+# Silhouette plot
+fviz_nbclust(data, kmeans, method = "silhouette")
+
+# Gap statistic
+fviz_nbclust(data, kmeans, method = "gap_stat")
+```
+
+## Cluster Visualization
+
+Clusters are visualized in a biplot, and then plotted using the original variables (Rating vs Price).
+
+```{r cluster-biplot, warning=FALSE, message=FALSE}
+# Cluster biplot
+fviz_cluster(kmeans(data, centers = 3, iter.max = 100, nstart = 100), data = data)
+```
+
+### Clusters with Original Variables
+
+Cluster labels are added to the original dataset, and clusters are visualized using the Rating and Price variables.
+
+```{r original-variable-clusters, warning=FALSE, message=FALSE}
+clusters <- kmeans(data, centers = 3, iter.max = 100, nstart = 100)
+Wine <- Wine |> mutate(cluster = clusters$cluster)
+
+# Plot clusters using Rating and Price
+Wine |> ggplot(aes(x = Rating, y = Price, col = as.factor(cluster))) + 
+  geom_point() + 
+  labs(title = "Wine Clusters by Rating and Price", color = "Cluster")
+```
+
+## Conclusion
+
+The k-means clustering analysis successfully grouped the wine dataset into 3 distinct clusters, which were visualized using the `Rating` and `Price` variables.
